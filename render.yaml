@@ -6,7 +6,7 @@ services:
     name: blink-terminal-backend
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn -k eventlet -w 1 'app:create_app()'
+    startCommand: gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:$PORT 'app:create_app()'
     plan: starter
     envVars:
       - key: SECRET_KEY

@@ -13,10 +13,10 @@ import structlog
 eventlet.monkey_patch()
 
 # Import the Flask application and SocketIO instance
-from app import create_app, logger
+from app import create_app, socketio, logger
 
 # Create the application
-app, socketio = create_app()
+app = create_app()
 
 if __name__ == '__main__':
     # Get port from environment or use default
@@ -31,4 +31,5 @@ if __name__ == '__main__':
                api_key_required=True)
     
     # Start the server with WebSocket support
+    # In development, we run with socketio.run
     socketio.run(app, host=host, port=port, debug=debug)
