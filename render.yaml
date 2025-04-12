@@ -1,0 +1,42 @@
+# Render deployment configuration for Blink Terminal Backend
+
+services:
+  # Web service with WebSocket support
+  - type: web
+    name: blink-terminal-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --worker-class eventlet -w 1 --bind # Let's check if all files were created correctly
+ls -la
+
+# Check if our commit worked
+git status
+
+# Ensure the render.yaml file was created properly
+cat render.yaml
+
+# Let's fix and complete the render.yaml file if it was truncated
+cat > render.yaml << 'EOL'
+# Render deployment configuration for Blink Terminal Backend
+
+services:
+  # Web service with WebSocket support
+  - type: web
+    name: blink-terminal-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:$PORT 'app:create_app()'
+    plan: starter
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: false
+      - key: PYTHONUNBUFFERED
+        value: true
+      - key: LOG_LEVEL
+        value: INFO
+      - key: LOG_FORMAT
+        value: json
+    healthCheckPath: /
+    autoDeploy: true
